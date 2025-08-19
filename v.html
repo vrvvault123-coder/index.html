@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRV Shop</title>
+  <style>
+    :root {
+      --bg:#0b1020;--card:#11182e;--muted:#92a1b3;--text:#e7ecf3;
+      --brand:#6ee7b7;--brand2:#60a5fa;
+    }
+    * {box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif;}
+    body {background:var(--bg);color:var(--text);}
+    header {
+      background:var(--card);padding:15px;display:flex;align-items:center;
+      justify-content:space-between;position:sticky;top:0;z-index:1000;
+    }
+    header h1 {color:var(--brand);font-size:20px;}
+    header input {padding:8px;border-radius:8px;border:none;width:40%;}
+    header .btns {display:flex;gap:10px;}
+    header button {
+      background:var(--brand2);color:white;border:none;padding:8px 14px;
+      border-radius:8px;cursor:pointer;transition:0.3s;
+    }
+    header button:hover {opacity:0.8;}
+    #product-list {
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+      gap:15px;padding:20px;
+    }
+    .card {
+      background:var(--card);padding:15px;border-radius:12px;text-align:center;
+      box-shadow:0 4px 10px rgba(0,0,0,0.3);transition:0.3s;
+    }
+    .card:hover {transform:translateY(-5px);}
+    .card img {width:100%;height:180px;object-fit:cover;border-radius:12px;}
+    .price {margin:8px 0;font-weight:bold;color:var(--brand);}
+    .old-price {text-decoration:line-through;color:var(--muted);margin-left:5px;}
+    .stock {font-size:12px;color:var(--muted);}
+    .cart-btn {
+      background:var(--brand);color:black;padding:8px 14px;margin-top:8px;
+      border:none;border-radius:8px;cursor:pointer;transition:0.3s;
+    }
+    .cart-btn:hover {background:var(--brand2);color:white;}
+    #cart-slide {
+      position:fixed;top:0;right:-400px;width:350px;height:100%;
+      background:var(--card);color:white;box-shadow:-4px 0 10px rgba(0,0,0,0.5);
+      padding:20px;transition:0.4s;overflow-y:auto;z-index:2000;
+    }
+    #cart-slide.active {right:0;}
+    #cart-slide h2 {margin-bottom:15px;}
+    .cart-item {
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:10px;background:#1a2238;padding:8px;border-radius:8px;
+    }
+    .cart-item span {font-size:14px;}
+    .checkout-btn {
+      background:var(--brand);color:black;width:100%;padding:10px;margin-top:15px;
+      border:none;border-radius:8px;font-size:16px;cursor:pointer;
+    }
+    .checkout-btn:hover {background:var(--brand2);color:white;}
+    .navbar {
+      background:var(--card);padding:10px;text-align:center;
+    }
+    .navbar .logo {font-size:22px;color:var(--brand);margin-bottom:5px;}
+    .categories a {
+      color:white;margin:0 8px;text-decoration:none;font-size:14px;
+    }
+    .categories a:hover {color:var(--brand);}
+  </style>
+</head>
+<body>
+
+
+<header>
+  <h1>VRV Shop</h1>
+  <input type="text" id="search" placeholder="Search products..." onkeyup="searchProducts()">
+
+  <div class="btns">
+    <button onclick="toggleAdmin()">Admin</button>
+    <button onclick="toggleCart()">Cart (<span id="cart-count">0</span>)</button>
+  </div>
+</header>
+<!-- Navbar -->
+
+  <div class="navbar">
+    <div class="categories">
+      <a href="#" onclick="filterCategory('all')">All</a>
+      <a href="#" onclick="filterCategory('men')">Men</a>
+      <a href="#" onclick="filterCategory('women')">Women</a>
+      <a href="#" onclick="filterCategory('child')">Child</a>
+      <a href="#" onclick="filterCategory('accessories')">Accessories</a>
+    </div>
+  </div>
+
+<div id="product-list"></div>
+
+<!-- Cart Slide -->
+<div id="cart-slide">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="cart-total">0</span></h3>
+  <button class="checkout-btn" onclick="checkout()">Checkout</button>
+</div>
+
+<script>
+  let products = [
+    { name:"Men's T-Shirt", price:499, discountedPrice:399, discount:20, stock:5, category:"men", img:"https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSTDCSzeoretdfMi7wMPlwKZpZDJdvFlEstBJmIQ1UOtqUNOBhRT63Flv2FQbEDSvBkV0JYop4lN6-0HnH-J8x8oLD39eD0UOxGLpgilFql" },
+    { name:"Stylish Watch", price:999, discountedPrice:749, discount:25, stock:10, category:"accessories", img:"https://m.media-amazon.com/images/I/61n0aVXta7L._UY1000_.jpg" },
+    { name:"Sneakers", price:1999, discountedPrice:1599, discount:20, stock:3, category:"men", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUi39XBxtsIOpEJjpqdKvtyn6cKo5cKR2Oiw&s" },
+{ name:"Men's T-Shirt", price:499, discountedPrice:399, discount:20, stock:5, category:"men", img:"https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSTDCSzeoretdfMi7wMPlwKZpZDJdvFlEstBJmIQ1UOtqUNOBhRT63Flv2FQbEDSvBkV0JYop4lN6-0HnH-J8x8oLD39eD0UOxGLpgilFql" },
+    { name:"Stylish Watch", price:999, discountedPrice:749, discount:25, stock:10, category:"accessories", img:"https://m.media-amazon.com/images/I/61n0aVXta7L._UY1000_.jpg" },
+    { name:"Sneakers", price:1999, discountedPrice:1599, discount:20, stock:3, category:"men", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUi39XBxtsIOpEJjpqdKvtyn6cKo5cKR2Oiw&s" },
+{ name:"Men's T-Shirt", price:499, discountedPrice:399, discount:20, stock:5, category:"men", img:"https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSTDCSzeoretdfMi7wMPlwKZpZDJdvFlEstBJmIQ1UOtqUNOBhRT63Flv2FQbEDSvBkV0JYop4lN6-0HnH-J8x8oLD39eD0UOxGLpgilFql" },
+    { name:"Stylish Watch", price:999, discountedPrice:749, discount:25, stock:10, category:"accessories", img:"https://m.media-amazon.com/images/I/61n0aVXta7L._UY1000_.jpg" },
+    { name:"Sneakers", price:1999, discountedPrice:1599, discount:20, stock:3, category:"men", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUi39XBxtsIOpEJjpqdKvtyn6cKo5cKR2Oiw&s" },
+
+    { name:"Backpack", price:799, discountedPrice:599, discount:25, stock:7, category:"accessories", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNhWdD_TkxpkebQ7VEmFq3vrt74tHXgvY9jQ&s" }
+  ];
+
+  let cart = [];
+
+  function renderProducts(list) {
+    let container = document.getElementById("product-list");
+    container.innerHTML = "";
+    list.forEach((p, index) => {
+      container.innerHTML += `
+        <div class="card">
+          <img src="${p.img}" alt="${p.name}">
+          <h3>${p.name}</h3>
+          <p class="price">₹${p.discountedPrice} 
+            <span class="old-price">₹${p.price}</span> 
+            (${p.discount}% off)
+          </p>
+          <p class="stock">${p.stock > 0 ? p.stock+" left" : "Out of stock"}</p>
+          <button class="cart-btn" onclick="addToCart(${index})">Add to Cart</button>
+        </div>
+      `;
+    });
+  }
+
+  function addToCart(index) {
+    let item = products[index];
+    let existing = cart.find(c => c.name === item.name);
+    if(existing){
+      existing.qty++;
+    } else {
+      cart.push({name:item.name, unitPrice:item.discountedPrice, qty:1});
+    }
+    updateCart();
+  }
+
+  function updateCart() {
+    let items = document.getElementById("cart-items");
+    let count = 0, total = 0;
+    items.innerHTML = "";
+    cart.forEach(c => {
+      count += c.qty;
+      let subtotal = c.unitPrice * c.qty;
+      total += subtotal;
+      items.innerHTML += `
+        <div class="cart-item">
+          <span>${c.name} x${c.qty}</span>
+          <span>₹${subtotal}</span>
+        </div>
+      `;
+    });
+    document.getElementById("cart-count").innerText = count;
+    document.getElementById("cart-total").innerText = total;
+  }
+
+  function toggleCart() {
+    document.getElementById("cart-slide").classList.toggle("active");
+  }
+
+  function checkout() {
+    let total = document.getElementById("cart-total").innerText;
+    if(cart.length === 0) { alert("Cart is empty!"); return; }
+
+    let msg = "Hello, I want to place an order:\n\n";
+    cart.forEach(c => {
+      msg += `• ${c.name} (x${c.qty}) - ₹${c.unitPrice * c.qty}\n`;
+    });
+    msg += `\nTotal Amount: ₹${total}\nPayment Mode: Cash on Delivery`;
+
+    window.open(`https://wa.me/919032302088?text=${encodeURIComponent(msg)}`);
+  }
+
+  function searchProducts() {
+    let q = document.getElementById("search").value.toLowerCase();
+    let filtered = products.filter(p => p.name.toLowerCase().includes(q));
+    renderProducts(filtered);
+  }
+
+  function filterCategory(cat) {
+    if(cat === "all") {
+      renderProducts(products);
+    } else {
+      let filtered = products.filter(p => p.category === cat);
+      renderProducts(filtered);
+    }
+  }
+
+  function toggleAdmin() {
+    let pass = prompt("Enter admin password:");
+    if(pass === "1234") {
+      let name = prompt("Product Name:");
+      let price = parseInt(prompt("Original Price:"));
+      let discounted = parseInt(prompt("Discounted Price:"));
+      let discount = Math.round(((price - discounted) / price) * 100);
+      let stock = parseInt(prompt("Stock:"));
+      let category = prompt("Category (men/women/child/accessories):");
+      let img = prompt("Image URL:");
+      products.push({name, price, discountedPrice:discounted, discount, stock, category, img});
+      renderProducts(products);
+    } else {
+      alert("Wrong password!");
+    }
+  }
+
+  renderProducts(products);
+</script>
+
+</body>
+</html>
