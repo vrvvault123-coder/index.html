@@ -1,224 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VRV Shop</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clothify.com </title>
+  <link rel="icon" type="image/jpg" href="https://www.shutterstock.com/image-illustration/highly-detailed-neon-sign-letter-260nw-94094494.jpg">
   <style>
     :root {
-      --bg:#0b1020;--card:#11182e;--muted:#92a1b3;--text:#e7ecf3;
-      --brand:#6ee7b7;--brand2:#60a5fa;
+      --bg: #f1f3f6;
+      --card: #ffffff;
+      --muted: #7d8793;
+      --text: #000;
+      --brand: #2874f0;
+      --brand2: #ff9f00;
     }
-    * {box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif;}
-    body {background:var(--bg);color:var(--text);}
-    header {
-      background:var(--card);padding:15px;display:flex;align-items:center;
-      justify-content:space-between;position:sticky;top:0;z-index:1000;
+     body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #f2f4f8;
     }
-    header h1 {color:var(--brand);font-size:20px;}
-    header input {padding:8px;border-radius:8px;border:none;width:40%;}
-    header .btns {display:flex;gap:10px;}
-    header button {
-      background:var(--brand2);color:white;border:none;padding:8px 14px;
-      border-radius:8px;cursor:pointer;transition:0.3s;
-    }
-    header button:hover {opacity:0.8;}
-    #product-list {
-      display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-      gap:15px;padding:20px;
-    }
-    .card {
-      background:var(--card);padding:15px;border-radius:12px;text-align:center;
-      box-shadow:0 4px 10px rgba(0,0,0,0.3);transition:0.3s;
-    }
-    .card:hover {transform:translateY(-5px);}
-    .card img {width:100%;height:180px;object-fit:cover;border-radius:12px;}
-    .price {margin:8px 0;font-weight:bold;color:var(--brand);}
-    .old-price {text-decoration:line-through;color:var(--muted);margin-left:5px;}
-    .stock {font-size:12px;color:var(--muted);}
-    .cart-btn {
-      background:var(--brand);color:black;padding:8px 14px;margin-top:8px;
-      border:none;border-radius:8px;cursor:pointer;transition:0.3s;
-    }
-    .cart-btn:hover {background:var(--brand2);color:white;}
-    #cart-slide {
-      position:fixed;top:0;right:-400px;width:350px;height:100%;
-      background:var(--card);color:white;box-shadow:-4px 0 10px rgba(0,0,0,0.5);
-      padding:20px;transition:0.4s;overflow-y:auto;z-index:2000;
-    }
-    #cart-slide.active {right:0;}
-    #cart-slide h2 {margin-bottom:15px;}
-    .cart-item {
-      display:flex;align-items:center;justify-content:space-between;
-      margin-bottom:10px;background:#1a2238;padding:8px;border-radius:8px;
-    }
-    .cart-item span {font-size:14px;}
-    .checkout-btn {
-      background:var(--brand);color:black;width:100%;padding:10px;margin-top:15px;
-      border:none;border-radius:8px;font-size:16px;cursor:pointer;
-    }
-    .checkout-btn:hover {background:var(--brand2);color:white;}
+
+    /* Navbar */
     .navbar {
-      background:var(--card);padding:10px;text-align:center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #2874f0;
+      padding: 12px 20px;
+      color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      flex-wrap: wrap;
     }
-    .navbar .logo {font-size:22px;color:var(--brand);margin-bottom:5px;}
-    .categories a {
-      color:white;margin:0 8px;text-decoration:none;font-size:14px;
+    .navbar h1 {
+      margin: 0;
+      font-size: 24px;
+      color: white;
     }
-    .categories a:hover {color:var(--brand);}
+    .search {
+      flex: 1;
+      margin: 0 15px;
+      position: relative;
+    }
+    .search input {
+      width: 160px;
+      max-width: 100%;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      transition: width 0.4s ease;
+    }
+    .search input:hover,
+    .search input:focus {
+      width: 300px;
+      outline: none;
+    }
+    .nav-btns {
+      display: flex;
+      gap: 10px;
+    }
+    .nav-btns button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      background: white;
+      color: #2874f0;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .nav-btns button:hover {
+      background: #e0e7f7;
+    }
+
+    .categories {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 10px;
+      background: var(--card);
+    }
+    .categories button {
+      flex: 0 0 auto;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      background: var(--brand2);
+      color: #000;
+      cursor: pointer;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      padding: 20px;
+    }
+    @media(max-width:768px) {
+      .products { grid-template-columns: repeat(2, 1fr); }
+      .categories { flex-wrap: nowrap; }
+    }
+    .product {
+      background: var(--card);
+      padding: 10px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .product img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .product h3 {
+      margin: 10px 0 5px;
+    }
+    .product p {
+      margin: 4px 0;
+      color: var(--muted);
+    }
+    .product button {
+      margin: 5px 4px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .add-btn { background: var(--brand); color: #fff; }
+    .buy-btn { background: var(--brand2); color: #000; }
+
+    /* Cart Drawer */
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 350px;
+      height: 100%;
+      background: var(--card);
+      box-shadow: -2px 0 8px rgba(0,0,0,0.5);
+      transition: 0.3s;
+      z-index: 100;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .cart-drawer.open { right: 0; }
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .cart-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-right: 10px;
+    }
+    .cart-item button.remove {
+      margin-left: auto;
+      background: red;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+    .cart-item button.buy-btn {
+      margin-top: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    /* Modal for Product Details */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+    }
+    .modal-content {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 90%;
+      position: relative;
+    }
+    .modal-content img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 20px;
+    }
   </style>
 </head>
 <body>
-
-
-<header>
-  <h1>VRV Shop</h1>
-  <input type="text" id="search" placeholder="Search products..." onkeyup="searchProducts()">
-
-  <div class="btns">
-    <button onclick="toggleAdmin()">Admin</button>
-    <button onclick="toggleCart()">Cart (<span id="cart-count">0</span>)</button>
+ <header class="navbar">
+  <h1>Clothify</h1>
+  <div class="search">
+    <input type="text" placeholder="Search products..." />
+  </div>
+  <div class="nav-btns">
+    <button id="adminBtn">Admin</button>
+    <button id="cartBtn">Cart 🛒</button>
   </div>
 </header>
-<!-- Navbar -->
 
-  <div class="navbar">
-    <div class="categories">
-      <a href="#" onclick="filterCategory('all')">All</a>
-      <a href="#" onclick="filterCategory('men')">Men</a>
-      <a href="#" onclick="filterCategory('women')">Women</a>
-      <a href="#" onclick="filterCategory('child')">Child</a>
-      <a href="#" onclick="filterCategory('accessories')">Accessories</a>
+  <div class="categories">
+    <button onclick="filterProducts('all')">All</button>
+    <button onclick="filterProducts('men')">Men</button>
+    <button onclick="filterProducts('women')">Women</button>
+    <button onclick="filterProducts('accessories')">Accessories</button>
+  </div>
+
+  <div class="products" id="products"></div>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h2>Cart</h2>
+      <span id="closeCart" style="cursor:pointer;font-size:20px">❌</span>
+    </div>
+    <div id="cartItems"></div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <span class="modal-close" id="closeModal">❌</span>
+      <img id="modalImg" src="" alt="">
+      <h3 id="modalName"></h3>
+      <p id="modalPrice"></p>
+      <p id="modalSizes"></p>
     </div>
   </div>
 
-<div id="product-list"></div>
+  <script>
+    let products = [
+      {name:" NAVY Shirt",price:499,discount:10,category:"men",img:"https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTklezuOoTOT20UcHVsTH9Cijv1i-cllqI6IxpQmNXr1GAxrVVO_7WWO8LYffQbjhbarZwUs0lxEa_-hwXpBc4zWsf8rAvErWDyJMf1liRadWzl5QnL2Y9GeA",sizes:"M,L,XL"},
+      {name:"Kashvi Petite Kurtis",price:379,discount:15,category:"women",img:"https://images.meesho.com/images/products/557927470/50avr_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:"Watch",price:1199,discount:20,category:"accessories",img:"https://media.istockphoto.com/id/1065329058/photo/premium-mens-watch-on-hand-close-up.jpg?s=612x612&w=0&k=20&c=VdpUac8ObrDZZ0I8OCD_vOxPqyOUCa3cM8zoqXsPkuE=",sizes:""},
+      {name:"T-Shirt",price:399,discount:5,category:"men",img:"https://images.bewakoof.com/t1080/men-s-brown-hustle-graphic-printed-oversized-acid-wash-t-shirt-677537-1747462579-1.jpg",sizes:"S,M,L,XL"},
+      {name:" Cotton Tshirt – Monkey D. Luffy Edition",price:240,discount:20,category:"men",img:"https://images.meesho.com/images/products/532919516/celpb_512.avif?width=512",sizes:"M,L,XL"},
+      {name:" Cotton Casual Shirt Full Sleeve",price:279,discount:5,category:"men",img:"https://images.meesho.com/images/products/572945775/l1rmf_512.avif?width=512",sizes:"S,M,L,XL"},
+      {name:" stylish dresses long knee length skater party wear",price:519,discount:10,category:"women",img:"https://images.meesho.com/images/products/329462495/6f681_512.avif?width=512",sizes:"M,L,XL,XXL,3XL,4XL,5XL"},
+      {name:" Sweatshirt—Warm Winter Pullover",price:399,discount:10,category:"men",img:"https://images.meesho.com/images/products/579318352/bmemq_512.avif?width=512",sizes:"M,L,XL"},
+      {name:"Azizan Men's White Ribbed Half Zip Sweatshirt",price:309,discount:15,category:"men",img:"https://images.meesho.com/images/products/574967722/pe9py_512.avif?width=512",sizes:"xl,M,L"},
+      {name:"PINK LACE DESIGNER KURTA",price:269 ,discount:15,category:"women",img:"https://images.meesho.com/images/products/563703167/xnhlw_512.avif?width=512",sizes:"S,M,L,XL,XXL,3XL,4XL"},
+      {name:"Stockton Stylish Sweatshirt ",price:379,discount:20,category:"men",img:"https://images.meesho.com/images/products/453726284/tus2d_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:" Flowers Printed Kurti",price: 469,discount:5,category:"women",img:"https://images.meesho.com/images/products/338790619/2bknt_512.avif?width=512",sizes:"S,M,L,XL,XXL,3XL,4XL,5XL"},
+      {name:"Men Oversize Tshirt | ATTACK ON TITAN",price:279,discount:15,category:"men",img:"https://images.meesho.com/images/products/418433257/f0c8s_512.avif?width=512",sizes:"M,L,XL"},
+      {name:"Fency anarkali gown for women",price:409 ,discount:20,category:"women",img:"https://images.meesho.com/images/products/384985157/cv0mt_512.avif?width=512",sizes:"M,L,XL,XXL"},
+      {name:"WEBRIC Men's Cotton Blend Shirt in White",price:379,discount:15,category:"men",img:"https://images.meesho.com/images/products/576929009/5s4qs_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:"Flower Printed Long Gown",price:399 ,discount:20,category:"women",img:"https://images.meesho.com/images/products/559043955/ur5iv_512.avif?width=512",sizes:"S,M,,L,XL,XXL"},
+      {name:"tshirt for men",price:249 ,discount:15,category:"men",img:"https://images.meesho.com/images/products/530859792/nouyd_512.avif?width=512",sizes:""},
+      {name:"Charvi Fabulous Kurtis",price:349 ,discount:20,category:"women",img:"https://images.meesho.com/images/products/546753059/ibajf_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:"baggy jeans for mens",price:650 ,discount:15,category:"men",img:"https://images.meesho.com/images/products/578497500/nur6h_512.avif?width=512",sizes:"28,30,32,34"},
+      {name:"MYRA Women Kurta Sets",price:580 ,discount:20,category:"women",img:"https://images.meesho.com/images/products/566076898/obhid_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:"White Trousers",price: 420 ,discount:5,category:"men",img:"https://images.meesho.com/images/products/499640261/8u671_512.avif?width=512",sizes:""},
+      {name:" Viscose Chanderi Kurta Set",price:420 ,discount:15,category:"women",img:"https://images.meesho.com/images/products/567850036/8fav1_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:"White Cloud Men Shirt",price: 340,discount:20,category:"men",img:"https://images.meesho.com/images/products/577250597/timfl_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:"Ravishing Men Shirts",price: 319 ,discount:5,category:"men",img:"https://images.meesho.com/images/products/548259704/ukvvq_512.avif?width=512",sizes:"M,L,XL"},
+      {name:"Popcorn shirt ",price:249,discount:15,category:"men",img:"https://images.meesho.com/images/products/551526986/mdsnf_512.avif?width=512",sizes:"M,L,XL"},
+      {name:"Chattai Design Casual Shirt",price:299 ,discount:20,category:"men",img:"https://images.meesho.com/images/products/432410973/osl5t_512.avif?width=512",sizes:"S,M,XL"},
+      {name:"Premium Shirt For Men",price: 419 ,discount:5,category:"men",img:"https://images.meesho.com/images/products/557881438/w4vsf_512.avif?width=512",sizes:"XL,L"},
+      {name:"Men's Stylish Oversized T-shirt",price:299 ,discount:15,category:"men",img:"https://images.meesho.com/images/products/522566031/aaniy_512.avif?width=512",sizes:"S,M,L,XL"},
+      {name:" Women's Oversize Loose T-shirt",price:129 ,discount:20,category:"women",img:"https://images.meesho.com/images/products/423314736/qminf_512.avif?width=512",sizes:"S,M,L"},
+      {name:"Top trending oversized t-shirts 2025",price: 299 ,discount:5,category:"women",img:"https://images.meesho.com/images/products/584143636/l5qox_512.avif?width=512",sizes:"S,M,L,XL"},
+      {name:"stylish comfortable for women t shirt",price: 159,discount:15,category:"women",img:"https://images.meesho.com/images/products/562340535/d5wli_512.avif?width=512",sizes:"S,M,L,XL"},
+      {name:"6 pocket jeans for mens",price:659 ,discount:15,category:"men",img:"https://images.meesho.com/images/products/553684569/eq6ot_512.avif?width=512",sizes:"28,30,32,34"},
+      {name:"Pants for Casual, Gym, and Outdoor Wear.",price: 369,discount:20,category:"men",img:"https://images.meesho.com/images/products/541088817/zn07v_512.avif?width=512",sizes:"30,32,34"},
+      {name:"Smart casual trousers|",price: 359 ,discount:5,category:"men",img:"https://images.meesho.com/images/products/583132400/trscy_512.avif?width=512",sizes:"28,30,32,32,34"},
+      {name:"Cargo Men’s Pants",price: 419,discount:15,category:"men",img:"https://images.meesho.com/images/products/583142129/1roxv_512.avif?width=512",sizes:"26,28,30,32,34"},
+      {name:"Track pant for men",price: 359,discount:20,category:"men",img:"https://images.meesho.com/images/products/555717490/tqfat_512.avif?width=512",sizes:"28,30,32"},
+      {name:"Lycra Strechable Shorts Pant ",price: 299,discount:5,category:"men",img:"https://images.meesho.com/images/products/507381475/qd8zt_512.avif?width=512",sizes:"30,32,34,36,38"},
+      {name:"MENS STYLISH DARK GREY SHORTS",price:219 ,discount:15,category:"men",img:"https://images.meesho.com/images/products/489526324/folip_512.avif?width=512",sizes:"S,M,L,XL"},
+      {name:"Men's Oversized Cotton T-Shirt",price: 259,discount:20,category:"men",img:"https://images.meesho.com/images/products/532860662/wbsqr_512.avif?width=512",sizes:"M,L,XL"},
+      {name:"T-Shirt – Itachi Uchiha Anime Naruto Edition",price: 259 ,discount:5,category:"men",img:"https://images.meesho.com/images/products/532853831/xxk6j_512.avif?width=512",sizes:"M,L,XL"},
+      {name:"Back Print Animesized t shirt",price:149 ,discount:15,category:"men",img:"https://images.meesho.com/images/products/465405426/385ig_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:"Man's Oversized T-shirt",price: 329,discount:20,category:"men",img:"https://images.meesho.com/images/products/235568494/a5jfc_512.avif?width=512",sizes:"S,M,L,XL"},
+      {name:"sweatshirt for winter - SASUKE",price:419  ,discount:5,category:"men",img:"https://images.meesho.com/images/products/459046665/rzods_512.avif?width=512",sizes:"M,L,XL"},
+      {name:"Regular Fit Full Sleeves Shirt",price:299 ,discount:15,category:"men",img:"https://images.meesho.com/images/products/528142101/kcuqz_512.avif?width=512",sizes:"S,M,L,XL"},
+      {name:"new stylish men watch",price: 339,discount:20,category:"accessories",img:"https://images.meesho.com/images/products/439706300/bjebm_512.avif?width=512",sizes:""},
+      {name:"Men Analog Watches",price: 169 ,discount:5,category:"accessories",img:"https://images.meesho.com/images/products/557038344/igltp_512.avif?width=512",sizes:""},
+      {name:"Emb Sky Blue Top & Tunics",price: 259,discount:15,category:"women",img:"https://images.meesho.com/images/products/51367907/2czcb_512.avif?width=512",sizes:"xl,xxl"},
+      {name:"Floral Tunic for Everyday or Party Look",price: 339,discount:20,category:"women",img:"https://images.meesho.com/images/products/449458200/sftvh_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:"NEW DRESSES ROZI WINE IN WOMEN",price:339  ,discount:5,category:"women",img:"https://images.meesho.com/images/products/523727832/pftdq_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:"Fancy Retro Women Dresses",price: 249,discount:15,category:"women",img:"https://images.meesho.com/images/products/382895205/jgonj_512.avif?width=512",sizes:"S,M,L"},
+      {name:"Women's Cotton Kurta Pant Set With Dupatta",price:469 ,discount:20,category:"women",img:"https://images.meesho.com/images/products/539382972/jpoq9_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:"Fluttring Wings TST _Brrown",price: 199 ,discount:5,category:"women",img:"https://images.meesho.com/images/products/540380235/uwcf1_512.avif?width=512",sizes:"S,M,L,XL,XXL"},
+      {name:"CUTE GIRL T-shirt",price:239 ,discount:20,category:"women",img:"https://images.meesho.com/images/products/558463555/kgcsg_512.avif?width=512",sizes:"XS,S,M,L"},
+      
+      
+      
+      
+      
+      
+      
+      
+      ];
+    let cart = [];
 
-<!-- Cart Slide -->
-<div id="cart-slide">
-  <h2>Your Cart</h2>
-  <div id="cart-items"></div>
-  <h3>Total: ₹<span id="cart-total">0</span></h3>
-  <button class="checkout-btn" onclick="checkout()">Checkout</button>
-</div>
-
-<script>
-  let products = [
-    { name:"Men's T-Shirt", price:499, discountedPrice:399, discount:20, stock:5, category:"men", img:"https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSTDCSzeoretdfMi7wMPlwKZpZDJdvFlEstBJmIQ1UOtqUNOBhRT63Flv2FQbEDSvBkV0JYop4lN6-0HnH-J8x8oLD39eD0UOxGLpgilFql" },
-    { name:"Stylish Watch", price:999, discountedPrice:749, discount:25, stock:10, category:"accessories", img:"https://m.media-amazon.com/images/I/61n0aVXta7L._UY1000_.jpg" },
-    { name:"Sneakers", price:1999, discountedPrice:1599, discount:20, stock:3, category:"men", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUi39XBxtsIOpEJjpqdKvtyn6cKo5cKR2Oiw&s" },
-{ name:"Men's T-Shirt", price:499, discountedPrice:399, discount:20, stock:5, category:"men", img:"https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSTDCSzeoretdfMi7wMPlwKZpZDJdvFlEstBJmIQ1UOtqUNOBhRT63Flv2FQbEDSvBkV0JYop4lN6-0HnH-J8x8oLD39eD0UOxGLpgilFql" },
-    { name:"Stylish Watch", price:999, discountedPrice:749, discount:25, stock:10, category:"accessories", img:"https://m.media-amazon.com/images/I/61n0aVXta7L._UY1000_.jpg" },
-    { name:"Sneakers", price:1999, discountedPrice:1599, discount:20, stock:3, category:"men", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUi39XBxtsIOpEJjpqdKvtyn6cKo5cKR2Oiw&s" },
-{ name:"Men's T-Shirt", price:499, discountedPrice:399, discount:20, stock:5, category:"men", img:"https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSTDCSzeoretdfMi7wMPlwKZpZDJdvFlEstBJmIQ1UOtqUNOBhRT63Flv2FQbEDSvBkV0JYop4lN6-0HnH-J8x8oLD39eD0UOxGLpgilFql" },
-    { name:"Stylish Watch", price:999, discountedPrice:749, discount:25, stock:10, category:"accessories", img:"https://m.media-amazon.com/images/I/61n0aVXta7L._UY1000_.jpg" },
-    { name:"Sneakers", price:1999, discountedPrice:1599, discount:20, stock:3, category:"men", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUi39XBxtsIOpEJjpqdKvtyn6cKo5cKR2Oiw&s" },
-
-    { name:"Backpack", price:799, discountedPrice:599, discount:25, stock:7, category:"accessories", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNhWdD_TkxpkebQ7VEmFq3vrt74tHXgvY9jQ&s" }
-  ];
-
-  let cart = [];
-
-  function renderProducts(list) {
-    let container = document.getElementById("product-list");
-    container.innerHTML = "";
-    list.forEach((p, index) => {
-      container.innerHTML += `
-        <div class="card">
-          <img src="${p.img}" alt="${p.name}">
-          <h3>${p.name}</h3>
-          <p class="price">₹${p.discountedPrice} 
-            <span class="old-price">₹${p.price}</span> 
-            (${p.discount}% off)
-          </p>
-          <p class="stock">${p.stock > 0 ? p.stock+" left" : "Out of stock"}</p>
-          <button class="cart-btn" onclick="addToCart(${index})">Add to Cart</button>
-        </div>
-      `;
-    });
-  }
-
-  function addToCart(index) {
-    let item = products[index];
-    let existing = cart.find(c => c.name === item.name);
-    if(existing){
-      existing.qty++;
-    } else {
-      cart.push({name:item.name, unitPrice:item.discountedPrice, qty:1});
+    function displayProducts(list){
+      const container = document.getElementById('products');
+      container.innerHTML = '';
+      list.forEach((p) => {
+        container.innerHTML += `
+          <div class="product">
+            <img src="${p.img}" onclick='openModal(${JSON.stringify(p)})'>
+            <h3>${p.name}</h3>
+            <p>₹${p.price} (-${p.discount}%)</p>
+            <button class="add-btn" onclick='addToCart(${JSON.stringify(p)})'>Add to Cart</button>
+            <button class="buy-btn" onclick='buyNow(${JSON.stringify(p)})'>Buy Now</button>
+          </div>`;
+      });
     }
-    updateCart();
-  }
 
-  function updateCart() {
-    let items = document.getElementById("cart-items");
-    let count = 0, total = 0;
-    items.innerHTML = "";
-    cart.forEach(c => {
-      count += c.qty;
-      let subtotal = c.unitPrice * c.qty;
-      total += subtotal;
-      items.innerHTML += `
-        <div class="cart-item">
-          <span>${c.name} x${c.qty}</span>
-          <span>₹${subtotal}</span>
-        </div>
-      `;
-    });
-    document.getElementById("cart-count").innerText = count;
-    document.getElementById("cart-total").innerText = total;
-  }
-
-  function toggleCart() {
-    document.getElementById("cart-slide").classList.toggle("active");
-  }
-
-  function checkout() {
-    let total = document.getElementById("cart-total").innerText;
-    if(cart.length === 0) { alert("Cart is empty!"); return; }
-
-    let msg = "Hello, I want to place an order:\n\n";
-    cart.forEach(c => {
-      msg += `• ${c.name} (x${c.qty}) - ₹${c.unitPrice * c.qty}\n`;
-    });
-    msg += `\nTotal Amount: ₹${total}\nPayment Mode: Cash on Delivery`;
-
-    window.open(`https://wa.me/919032302088?text=${encodeURIComponent(msg)}`);
-  }
-
-  function searchProducts() {
-    let q = document.getElementById("search").value.toLowerCase();
-    let filtered = products.filter(p => p.name.toLowerCase().includes(q));
-    renderProducts(filtered);
-  }
-
-  function filterCategory(cat) {
-    if(cat === "all") {
-      renderProducts(products);
-    } else {
-      let filtered = products.filter(p => p.category === cat);
-      renderProducts(filtered);
+    function filterProducts(cat){
+      if(cat==='all') displayProducts(products);
+      else displayProducts(products.filter(p => p.category === cat));
     }
-  }
 
-  function toggleAdmin() {
-    let pass = prompt("Enter admin password:");
-    if(pass === "1234") {
-      let name = prompt("Product Name:");
-      let price = parseInt(prompt("Original Price:"));
-      let discounted = parseInt(prompt("Discounted Price:"));
-      let discount = Math.round(((price - discounted) / price) * 100);
-      let stock = parseInt(prompt("Stock:"));
-      let category = prompt("Category (men/women/child/accessories):");
-      let img = prompt("Image URL:");
-      products.push({name, price, discountedPrice:discounted, discount, stock, category, img});
-      renderProducts(products);
-    } else {
-      alert("Wrong password!");
+    function addToCart(p){
+      cart.push(p);
+      renderCart();
     }
-  }
 
-  renderProducts(products);
-</script>
+    function renderCart(){
+      const cartBox = document.getElementById('cartItems');
+      cartBox.innerHTML = '';
+      cart.forEach((item,index) => {
+        const msg = `COD Order: ${item.name}, Price: ₹${item.price}, Discount: ${item.discount}%`;
+        cartBox.innerHTML += `
+          <div class="cart-item">
+            <img src="${item.img}">
+            <div>
+              <p>${item.name}</p>
+              <small>₹${item.price}</small><br>
+              <button class="buy-btn" onclick="window.open('https://wa.me/9032302088?text=${encodeURIComponent(msg)}')">Buy Now</button>
+            </div>
+            <button class="remove" onclick="removeFromCart(${index})">🗑️</button>
+          </div>`;
+      });
+    }
 
+    function removeFromCart(index){
+      cart.splice(index, 1);
+      renderCart();
+    }
+
+    function buyNow(p){
+      const msg = `COD Order: ${p.name}, Price: ₹${p.price}, Discount: ${p.discount}%`;
+      window.open(`https://wa.me/7337560874?text=${encodeURIComponent(msg)}`);
+    }
+
+    // Modal controls
+    const modal = document.getElementById('productModal');
+    document.getElementById('closeModal').onclick = () => modal.style.display = 'none';
+
+    // ✅ Close when clicking outside modal-content
+    window.onclick = function(e) {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    };
+
+    function openModal(p){
+      document.getElementById('modalImg').src = p.img;
+      document.getElementById('modalName').innerText = p.name;
+      document.getElementById('modalPrice').innerText = `₹${p.price} (-${p.discount}%)`;
+      document.getElementById('modalSizes').innerText = p.sizes ? `Sizes Available: ${p.sizes}` : '';
+      modal.style.display = 'flex';
+    }
+
+    // Drawer controls
+    const cartDrawer = document.getElementById('cartDrawer');
+    document.getElementById('cartBtn').onclick = () => cartDrawer.classList.add('open');
+    document.getElementById('closeCart').onclick = () => cartDrawer.classList.remove('open');
+
+    // Initial load
+    displayProducts(products);
+  </script>
 </body>
 </html>
